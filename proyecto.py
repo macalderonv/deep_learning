@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import matplotlib.pyplot as plt
 import numpy as np
+
 """
 Spyder Editor
 
@@ -28,7 +29,12 @@ tiempo_ci = []
 tiempo_pi = []
 
 
-def segundos(hh,mm,ss):
+def segundos(hora):
+    hh = float(hora[0] + hora[1])
+    #print(hh * 3600)
+    mm = float(hora[3] + hora[4])
+    ss = float(hora[6:])
+    print(ss)
     segundostotales=(hh*3600)+(mm*60)+ss
     return segundostotales
 
@@ -44,14 +50,18 @@ def leertxt():
             #print(linea)
             if linea[1] == 't':
                 #print('Tiempo:' + linea[3:15])
-                tiempo.append(linea[3:15])
+                segs= segundos(linea[3:15])
+                tiempo.append(segs)
+                
                 
                 #print('Dispositivo: ' + linea[34:38])
                 #eje_x.append(linea[linea.find("X")+2:linea.find("Y")-3])
                 #eje_y.append(linea[linea.find("Y")+2:linea.find("Z")-3])
                 #eje_z.append(linea[linea.find("Z")+2:linea.find("q")-2])
-            #print('---')
-    
+            #print('--------------------------------------------------------------')
+    print(tiempo)
+    sorted(tiempo)
+    print('--------------------------------------------------------------')
     print(tiempo)
     #print(len(eje_x))
     #print(len(eje_y))
@@ -68,8 +78,8 @@ def leertxt():
 def main():
     leertxt()
     
-    milista = [4,1,8,2,9]
-    print sorted(milista)
+    #milista = [4,1,8,2,9]
+    #print sorted(milista)
     
     
 main()
