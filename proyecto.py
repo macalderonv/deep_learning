@@ -34,38 +34,77 @@ def segundos(hora):
     #print(hh * 3600)
     mm = float(hora[3] + hora[4])
     ss = float(hora[6:])
-    print(ss)
+    #print(ss)
     segundostotales=(hh*3600)+(mm*60)+ss
     return segundostotales
 
-def leertxt():
-    f = open ('Acc_Data_2018_10_19_12_04_19_P.txt','r')
+def leertxt(file):
+    f = open (file,'r')
     mensaje = f.read()
     #print(mensaje)
     
-    tiempo = []
-    eje_x = []
-    eje_y = []
-    eje_z = []
-    with open('Acc_Data_2018_10_19_12_04_19_P.txt') as archivo:
+    #inicialization time and axes
+    
+    #second sensor
+    tiempo_1 = []
+    eje_x_1 = []
+    eje_y_1 = []
+    eje_z_1 = []
+    
+    #first sensor
+    tiempo_2 = []
+    eje_x_2 = []
+    eje_y_2 = []
+    eje_z_2 = []
+    
+    #mac identifying which sensor. The file is suppose to have the information 
+    #from two different sensor, placed in the same high in the body, e.g., foot (two sensors),
+    #, hip(two sensor)
+    
+    #TODO verify the MAC address for each sensor and the location of the sensors
+    
+    #if the sensor is in the hip
+    if file[-5] == 'C':
+        sen_addr_1 = "0014.4F01.0000.7B06" #TODO verify if this correspon to Cd o Ci
+        sen_addr_2 = "0014.4F01.0000.76D8" #TODO verify if this correspon to Cd o Ci
+    #if the sensor is in the foot
+    elif file[-5] == "P":
+        sen_addr_1 = "0014.4F01.0000.7E23 " #TODO verify if this correspon to Pd o Pi
+        sen_addr_2 = "0014.4F01.0000.7EB9" #TODO verify if this correspon to Pd o Pi
+        
+    
+    with open(file) as archivo:
+        #read line by line the file.
+        
+        #TO_DO: read and save the header information
         
         for linea in archivo:
             #print(linea)
+            
+            
+            
             if linea[1] == 't':
-                #print('Tiempo:' + linea[3:15])
-                segs= segundos(linea[3:15])
-                tiempo.append(segs)
                 
+                #find sensor MAC addres in this line
+                aux_sen_addr = linea[linea.find("s")+2:linea.find("X")-3]
                 
-                #print('Dispositivo: ' + linea[34:38])
-                eje_x.append(linea[linea.find("X")+2:linea.find("Y")-3])
-                eje_y.append(linea[linea.find("Y")+2:linea.find("Z")-3])
-                eje_z.append(linea[linea.find("Z")+2:linea.find("q")-2])
-            #print('--------------------------------------------------------------')
-    print(tiempo)
-    sorted(tiempo)
-    print('--------------------------------------------------------------')
-    print(tiempo)
+                # get values from line corresponding to sensor 1
+                if sen_addr_1 == aux_sen_addr:
+                    segs= segundos(linea[3:15])
+                    tiempo_1.append(segs)
+                    eje_x_1.append(linea[linea.find("X")+2:linea.find("Y")-3])
+                    eje_y_1.append(linea[linea.find("Y")+2:linea.find("Z")-3])
+                    eje_z_1.append(linea[linea.find("Z")+2:linea.find("q")-2])
+                
+                # get values form the line corresponding to sensor 2
+                elif  sen_addr_2 == aux_sen_addr: 
+                    segs= segundos(linea[3:15])
+                    tiempo_2.append(segs)
+                    eje_x_2.append(linea[linea.find("X")+2:linea.find("Y")-3])
+                    eje_y_2.append(linea[linea.find("Y")+2:linea.find("Z")-3])
+                    eje_z_2.append(linea[linea.find("Z")+2:linea.find("q")-2])
+                
+                    
     #print(len(eje_x))
     #print(len(eje_y))
     #fs = 50 #Hz
@@ -76,33 +115,52 @@ def leertxt():
     #plt.plot(t,eje_z)
     
     #converting into numpy
-    tiempo = np.array(tiempo)
-    eje_x = np.array(eje_x,dtype = 'float')
-    eje_y = np.array(eje_y,dtype = 'float')
-    eje_z = np.array(eje_z,dtype = 'float')
+    tiempo_1 = np.array(tiempo_1)
+    eje_x_1 = np.array(eje_x_1,dtype = 'float')
+    eje_y_1 = np.array(eje_y_1,dtype = 'float')
+    eje_z_1 = np.array(eje_z_1,dtype = 'float')
     
-    
+    tiempo_2 = np.array(tiempo_2)
+    eje_x_2 = np.array(eje_x_2,dtype = 'float')
+    eje_y_2 = np.array(eje_y_2,dtype = 'float')
+    eje_z_2 = np.array(eje_z_2,dtype = 'float')    
     #Sorting out arrays
-    idx_sort = np.argsort(tiempo)
-    tiempo = tiempo[idx_sort]
-    eje_x = eje_x[idx_sort]
-    eje_y = eje_y[idx_sort]
-    eje_z = eje_z[idx_sort]
+    idx_sort_1 = np.argsort(tiempo_1)
+    tiempo_1 = tiempo_1[idx_sort_1]
+    eje_x_1 = eje_x_1[idx_sort_1]
+    eje_y_1 = eje_y_1[idx_sort_1]
+    eje_z_1 = eje_z_1[idx_sort_1]
+    
+    idx_sort_2 = np.argsort(tiempo_2)
+    tiempo_2 = tiempo_2[idx_sort_2]
+    eje_x_2 = eje_x_2[idx_sort_2]
+    eje_y_2 = eje_y_2[idx_sort_2]
+    eje_z_2 = eje_z_2[idx_sort_2]
     
     f.close()   
-    return tiempo,eje_x,eje_y,eje_z
+    
+    return tiempo_1,eje_x_1,eje_y_1,eje_z_1,tiempo_2,eje_x_2,eje_y_2,eje_z_2
 
-tiempo, eje_x, eje_y, eje_z = leertxt()
+#running
+data = leertxt('./999/Acc_Data_2019_02_06_17_56_37_C.txt')
 
-plt.plot(tiempo,'.-')
+#get sampling frequency
 
+print("Sampling freq sensor 1: ",1/np.mean(np.diff(data[0])))
+print("Sampling freq sensor 2: ",1/np.mean(np.diff(data[4])))
+   
+    
+plt.plot(data[0],data[1])
+plt.plot(data[4],data[5])
+
+#remove means
 plt.figure()
-plt.subplot(311)
-plt.plot(tiempo,eje_x)
-plt.subplot(312)
-plt.plot(tiempo,eje_y)
-plt.subplot(313)
-plt.plot(tiempo,eje_z)
+plt.plot(data[0],data[1]-np.mean(data[1]))
+plt.plot(data[4],data[5]-np.mean(data[5]))
+
+#TODO get data from both, C and P, and remove the parts, to have time series of
+#the same length (front and rear).
+
     
     #milista = [4,1,8,2,9]
     #print sorted(milista)
