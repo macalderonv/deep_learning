@@ -41,6 +41,7 @@ def segundos(hora):
 def leertxt(file):
     """
     TODO: ejemplo de documentación para cambiar
+    
     Compute HRV traingular geometrical index. Total number of all NN intervals
     divided by the height of the histogram of all NN intervals measured
     on a discrete scale with bins of 7.8125 ms (1/128 seconds).
