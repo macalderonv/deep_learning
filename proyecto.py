@@ -39,6 +39,24 @@ def segundos(hora):
     return segundostotales
 
 def leertxt(file):
+    """
+    TODO: ejemplo de documentación para cambiar
+    Compute HRV traingular geometrical index. Total number of all NN intervals
+    divided by the height of the histogram of all NN intervals measured
+    on a discrete scale with bins of 7.8125 ms (1/128 seconds).
+    
+    Parameters
+    ----------
+    rr : numpy array (n_samples, 1)
+        RR intervals time series, in ms units.
+    flag : boolean
+        It allows to sketch the histogram used to compute the HRV triangular index
+    Returns
+    -------
+    res : float 
+        HRV traingular index.
+    """
+    
     f = open (file,'r')
     mensaje = f.read()
     #print(mensaje)
@@ -65,12 +83,12 @@ def leertxt(file):
     
     #if the sensor is in the hip
     if file[-5] == 'C':
-        sen_addr_1 = "0014.4F01.0000.7B06" #TODO verify if this correspon to Cd o Ci
-        sen_addr_2 = "0014.4F01.0000.76D8" #TODO verify if this correspon to Cd o Ci
+        sen_addr_1 = "0014.4F01.0000.76D8" #left-hip
+        sen_addr_2 = "0014.4F01.0000.7B06" #right-hip
     #if the sensor is in the foot
     elif file[-5] == "P":
-        sen_addr_1 = "0014.4F01.0000.7E23 " #TODO verify if this correspon to Pd o Pi
-        sen_addr_2 = "0014.4F01.0000.7EB9" #TODO verify if this correspon to Pd o Pi
+        sen_addr_1 = "0014.4F01.0000.7E23 " #left-foot
+        sen_addr_2 = "0014.4F01.0000.7EB9" #rigth-foot
         
     
     with open(file) as archivo:
