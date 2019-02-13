@@ -12,22 +12,7 @@ eje_y = []
 eje_z = []
 tiempo = []
 
-ejex_cd = []
-ejey_cd = []
-ejez_cd = []
-ejex_ci = []
-ejey_ci = []
-ejez_ci = []
-ejex_pd = []
-ejey_pd = []
-ejez_pd = []
-ejex_pi = []
-ejey_pi = []
-ejez_pi = []
-tiempo_cd = []
-tiempo_ci = []
-tiempo_pd = []
-tiempo_pi = []
+
 
 
 
@@ -64,23 +49,28 @@ def leertxt(file):
     
     f = open (file,'r')
     #mensaje = f.read()
-    #print(mensaje)
     
     #inicialization time and axes
     
     #second sensor
-    tiempo_1 = []
-    eje_x_1 = []
-    eje_y_1 = []
-    eje_z_1 = []
-    
-    #first sensor
-    tiempo_2 = []
-    eje_x_2 = []
-    eje_y_2 = []
-    eje_z_2 = []
     
     header = []
+    ejex_cd = []
+    ejey_cd = []
+    ejez_cd = []
+    ejex_ci = []
+    ejey_ci = []
+    ejez_ci = []
+    ejex_pd = []
+    ejey_pd = []
+    ejez_pd = []
+    ejex_pi = []
+    ejey_pi = []
+    ejez_pi = []
+    tiempo_cd = []
+    tiempo_ci = []
+    tiempo_pd = []
+    tiempo_pi = []
     
     #mac identifying which sensor. The file is suppose to have the information 
     #from two different sensor, placed in the same high in the body, e.g., foot (two sensors),
@@ -90,12 +80,12 @@ def leertxt(file):
     
     #if the sensor is in the hip
     if file[-5] == 'C':
-        sen_addr_1 = "0014.4F01.0000.76D8" #left-hip
-        sen_addr_2 = "0014.4F01.0000.7B06" #right-hip
+        sen_addr_ci = "0014.4F01.0000.76D8" #left-hip
+        sen_addr_cd = "0014.4F01.0000.7B06" #right-hip
     #if the sensor is in the foot
     elif file[-5] == "P":
-        sen_addr_1 = "0014.4F01.0000.7E23 " #left-foot
-        sen_addr_2 = "0014.4F01.0000.7EB9" #rigth-foot
+        sen_addr_pi = "0014.4F01.0000.7E23 " #left-foot
+        sen_addr_pd = "0014.4F01.0000.7EB9" #rigth-foot
         
     
     with open(file) as archivo:
@@ -113,24 +103,35 @@ def leertxt(file):
                 
                 #find sensor MAC addres in this line
                 aux_sen_addr = linea[linea.find("s")+2:linea.find("X")-3]
-                
+                print(aux_sen_addr)
                 # get values from line corresponding to sensor 1
-                if sen_addr_1 == aux_sen_addr:
+                if sen_addr_ci == aux_sen_addr:
                     segs= segundos(linea[3:15])
-                    tiempo_1.append(segs)
-                    eje_x_1.append(linea[linea.find("X")+2:linea.find("Y")-3])
-                    eje_y_1.append(linea[linea.find("Y")+2:linea.find("Z")-3])
-                    eje_z_1.append(linea[linea.find("Z")+2:linea.find("q")-2])
-                
+                    tiempo_ci.append(segs)
+                    ejex_ci.append(linea[linea.find("X")+2:linea.find("Y")-3])
+                    ejey_ci.append(linea[linea.find("Y")+2:linea.find("Z")-3])
+                    ejex_ci.append(linea[linea.find("Z")+2:linea.find("q")-2])
                 # get values form the line corresponding to sensor 2
-                elif  sen_addr_2 == aux_sen_addr: 
+                elif  sen_addr_cd == aux_sen_addr: 
                     segs= segundos(linea[3:15])
-                    tiempo_2.append(segs)
-                    eje_x_2.append(linea[linea.find("X")+2:linea.find("Y")-3])
-                    eje_y_2.append(linea[linea.find("Y")+2:linea.find("Z")-3])
-                    eje_z_2.append(linea[linea.find("Z")+2:linea.find("q")-2])
-                
-
+                    tiempo_cd.append(segs)
+                    ejex_cd.append(linea[linea.find("X")+2:linea.find("Y")-3])
+                    ejey_cd.append(linea[linea.find("Y")+2:linea.find("Z")-3])
+                    ejez_cd.append(linea[linea.find("Z")+2:linea.find("q")-2])
+                # get values from line corresponding to sensor 1
+                elif sen_addr_pi == aux_sen_addr:
+                    segs= segundos(linea[3:15])
+                    tiempo_pi.append(segs)
+                    ejex_pi.append(linea[linea.find("X")+2:linea.find("Y")-3])
+                    ejey_pi.append(linea[linea.find("Y")+2:linea.find("Z")-3])
+                    ejex_pi.append(linea[linea.find("Z")+2:linea.find("q")-2])
+                # get values form the line corresponding to sensor 2
+                elif  sen_addr_pd == aux_sen_addr: 
+                    segs= segundos(linea[3:15])
+                    tiempo_pd.append(segs)
+                    ejex_pd.append(linea[linea.find("X")+2:linea.find("Y")-3])
+                    ejey_pd.append(linea[linea.find("Y")+2:linea.find("Z")-3])
+                    ejez_pd.append(linea[linea.find("Z")+2:linea.find("q")-2])
     #fs = 50 #Hz
     #t = np.arange(0,len(eje_x))/fs
     #plt.figure(figsize=(8,10))
@@ -139,33 +140,55 @@ def leertxt(file):
     #plt.plot(t,eje_z)
     
     #converting into numpy
-    tiempo_1 = np.array(tiempo_1)
-    eje_x_1 = np.array(eje_x_1,dtype = 'float')
-    eje_y_1 = np.array(eje_y_1,dtype = 'float')
-    eje_z_1 = np.array(eje_z_1,dtype = 'float')
+    tiempo_ci = np.array(tiempo_ci)
+    ejex_ci = np.array(ejex_ci,dtype = 'float')
+    ejey_ci = np.array(ejey_ci,dtype = 'float')
+    ejez_ci = np.array(ejez_ci,dtype = 'float')
     
-    tiempo_2 = np.array(tiempo_2)
-    eje_x_2 = np.array(eje_x_2,dtype = 'float')
-    eje_y_2 = np.array(eje_y_2,dtype = 'float')
-    eje_z_2 = np.array(eje_z_2,dtype = 'float')  
+    tiempo_cd = np.array(tiempo_cd)
+    ejex_cd = np.array(ejex_cd,dtype = 'float')
+    ejey_cd = np.array(ejey_cd,dtype = 'float')
+    ejez_cd = np.array(ejez_cd,dtype = 'float') 
+
+    tiempo_pi = np.array(tiempo_ci)
+    ejex_pi = np.array(ejex_pi,dtype = 'float')
+    ejey_pi = np.array(ejey_pi,dtype = 'float')
+    ejez_pi = np.array(ejez_pi,dtype = 'float')
+    
+    tiempo_pd = np.array(tiempo_cd)
+    ejex_pd = np.array(ejex_pd,dtype = 'float')
+    ejey_pd = np.array(ejey_pd,dtype = 'float')
+    ejez_pd = np.array(ejez_pd,dtype = 'float') 
     
     
     #Sorting out arrays
-    idx_sort_1 = np.argsort(tiempo_1)
-    tiempo_1 = tiempo_1[idx_sort_1]
-    eje_x_1 = eje_x_1[idx_sort_1]
-    eje_y_1 = eje_y_1[idx_sort_1]
-    eje_z_1 = eje_z_1[idx_sort_1]
+    idx_sort_ci = np.argsort(tiempo_ci)
+    tiempo_ci = tiempo_ci[idx_sort_ci]
+    ejex_ci = ejex_ci[idx_sort_ci]
+    ejey_ci = ejey_ci[idx_sort_ci]
+    ejez_ci = ejez_ci[idx_sort_ci]
     
-    idx_sort_2 = np.argsort(tiempo_2)
-    tiempo_2 = tiempo_2[idx_sort_2]
-    eje_x_2 = eje_x_2[idx_sort_2]
-    eje_y_2 = eje_y_2[idx_sort_2]
-    eje_z_2 = eje_z_2[idx_sort_2]
+    idx_sort_cd = np.argsort(tiempo_cd)
+    tiempo_cd = tiempo_cd[idx_sort_cd]
+    ejex_cd = ejex_cd[idx_sort_cd]
+    ejey_cd = ejey_cd[idx_sort_cd]
+    ejez_cd = ejez_cd[idx_sort_cd]
+    
+    idx_sort_pi = np.argsort(tiempo_pi)
+    tiempo_pi = tiempo_ci[idx_sort_pi]
+    ejex_pi = ejex_ci[idx_sort_pi]
+    ejey_pi = ejey_ci[idx_sort_pi]
+    ejez_pi = ejez_ci[idx_sort_pi]
+    
+    idx_sort_pd = np.argsort(tiempo_pd)
+    tiempo_pd = tiempo_pd[idx_sort_pd]
+    ejex_pd = ejex_pd[idx_sort_pd]
+    ejey_pd = ejey_pd[idx_sort_pd]
+    ejez_pd = ejez_pd[idx_sort_pd]
     
     f.close()   
     
-    return tiempo_1,eje_x_1,eje_y_1,eje_z_1,tiempo_2,eje_x_2,eje_y_2,eje_z_2
+    return tiempo_ci,ejex_ci,ejey_ci,ejez_ci,tiempo_cd,ejex_cd,ejey_cd,ejez_cd,tiempo_pi,ejex_pi,ejey_pi,ejez_pi,tiempo_pd,ejex_pd,ejey_pd,ejez_pd
 
 def procesar_registro(ident):
     """
@@ -195,39 +218,11 @@ def procesar_registro(ident):
         #procesar cada fichero
         #si es cadera
         response = leertxt(filename)
+        print(response)
         
-        if filename[-5] == 'C':
-            print("cadera")
-            tiempo_ci.append(response[0])
-            ejex_ci.append(response[1]) 
-            ejey_ci.append(response[2])
-            ejez_ci.append(response[3])
-            tiempo_cd.append(response[4])
-            ejex_cd.append(response[5])
-            ejey_cd.append(response[6]) 
-            ejez_cd.append(response[7])
         #si es pie
-        elif filename[-5] == "P":
-            print("pies")
             
-            [tiempo_pi,ejex_pi,ejey_pi,ejez_pi,tiempo_pd,ejex_pd,ejey_pd,ejez_pd]= leertxt(filename)
-            print("tiempo_pi")
-            print(tiempo_pi)
-            print("ejex_pi")
-            print(ejex_pi)
-            print("ejey_pi")
-            print(ejey_pi)
-            print("ejez_pi")
-            print(ejez_pi)
-            print("tiempo_pd")
-            print(tiempo_pd)
-            print("ejex_pd")
-            print(ejex_pd)
-            print("ejey_pd")
-            print(ejey_pd)
-            print("ejez_pd")
-            print(ejez_pd)
-            
+        
         
   #  cadera = leertxt(datos_cadera)
   #  pies = leertxt(datos_pies)
