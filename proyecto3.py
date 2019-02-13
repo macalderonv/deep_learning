@@ -78,14 +78,11 @@ def leertxt(file):
     
     #TODO verify the MAC address for each sensor and the location of the sensors
     
-    #if the sensor is in the hip
-    if file[-5] == 'C':
-        sen_addr_ci = "0014.4F01.0000.76D8" #left-hip
-        sen_addr_cd = "0014.4F01.0000.7B06" #right-hip
-    #if the sensor is in the foot
-    elif file[-5] == "P":
-        sen_addr_pi = "0014.4F01.0000.7E23 " #left-foot
-        sen_addr_pd = "0014.4F01.0000.7EB9" #rigth-foot
+    #MAc de cada sensor
+    sen_addr_ci = "0014.4F01.0000.76D8" #left-hip
+    sen_addr_cd = "0014.4F01.0000.7B06" #right-hip
+    sen_addr_pi = "0014.4F01.0000.7E23 " #left-foot
+    sen_addr_pd = "0014.4F01.0000.7EB9" #rigth-foot
         
     
     with open(file) as archivo:
@@ -103,7 +100,7 @@ def leertxt(file):
                 
                 #find sensor MAC addres in this line
                 aux_sen_addr = linea[linea.find("s")+2:linea.find("X")-3]
-                print(aux_sen_addr)
+                print("MAC: " + aux_sen_addr)
                 # get values from line corresponding to sensor 1
                 if sen_addr_ci == aux_sen_addr:
                     segs= segundos(linea[3:15])
@@ -214,7 +211,7 @@ def procesar_registro(ident):
     
     #recorrer los ficheros de la carpeta
     for filename in glob.glob('*.txt'):
-        print(filename)
+        #print(filename)
         #procesar cada fichero
         #si es cadera
         response = leertxt(filename)
