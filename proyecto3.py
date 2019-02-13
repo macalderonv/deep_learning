@@ -234,7 +234,7 @@ def procesar_registro(ident):
     
 procesar_registro('./999/')
 #running
-data = leertxt('./999/Acc_Data_2019_02_06_17_56_37_C.txt')
+#data = leertxt('./999/Acc_Data_2019_02_06_17_56_37_C.txt')
 
 #get sampling frequency
 
